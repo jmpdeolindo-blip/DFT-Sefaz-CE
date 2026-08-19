@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Coletor de Demanda — SEFAZ-CE (v2.6)</title>
+<title>Coletor de Demanda — SEFAZ-CE (v2.7)</title>
 <style>
 
   :root {
@@ -175,7 +175,7 @@
 
 <div class="top">
   <div>
-    <h1>Coletor de Demanda <span class="tag">SEFAZ-CE</span><span class="ver">v2.6</span></h1>
+    <h1>Coletor de Demanda <span class="tag">SEFAZ-CE</span><span class="ver">v2.7</span></h1>
   </div>
   <div class="top-r">
     <div class="autosave" id="autosave-ind"><span class="dot"></span><span id="autosave-txt">Salvamento automático ativo</span></div>
@@ -215,7 +215,7 @@
       <div class="fd" data-val-field="f-celula">
         <label>Célula</label>
         <select id="f-celula" name="celula" onchange="onCelulaChange()"></select>
-        <div class="hint">Se você é Coordenador (gestão da coordenadoria como um todo), escolha a opção "Atuo na Coordenadoria" no final da lista.</div>
+        <div class="hint">Se você atua diretamente na coordenadoria, sem célula específica (Coordenador, Servidor Auditor ou Colaborador Terceirizado), escolha a opção "Atuo na Coordenadoria" no final da lista.</div>
       </div>
       <div class="fd" data-val-field="f-nucleo" id="fd-nucleo">
         <label>Núcleo</label>
@@ -526,7 +526,7 @@ function fillSelect(el, options, placeholder, selected, labelFn) {
 }
 
 function labelCelulaOpcao(coord, celula) {
-  return ehNivelCoordenadoria(coord, celula) ? '— Atuo na Coordenadoria (Coordenador, sem célula específica) —' : celula;
+  return ehNivelCoordenadoria(coord, celula) ? '— Atuo na Coordenadoria (selecione seu cargo na coordenadoria) —' : celula;
 }
 function labelNucleoOpcao(coord, celula, nucleo) {
   if (ehNivelCoordenadoria(coord, celula)) return 'Nível de Coordenador';
@@ -1828,7 +1828,7 @@ function buildPayloadJson() {
   const gestao = ehCargoGestao();
   const apoio = ehCargoApoio();
   const base = {
-    versao: 'html-sefaz-ce-v2.6',
+    versao: 'html-sefaz-ce-v2.7',
     unidade: 'SEFAZ-CE',
     tipo_resposta: gestao ? 'gestao' : (apoio ? 'apoio' : 'operacional'),
     data_coleta: new Date().toISOString(),
@@ -1878,7 +1878,7 @@ function buildLinhasEstruturadas(enviadoEmOverride) {
     plantao: state.plantao.ativo ? 'SIM' : 'NAO', escala_dias: plantaoEscalaTexto(), turno_plantao: plantaoTurnoTexto(),
     cobertura_processos_exaustiva: state.coberturaProcessos || null,
     enviado: state.enviado?.enviado ? 'SIM' : 'NAO', enviado_em: enviadoEm, data_coleta: today,
-    versao_coletor: 'html-sefaz-ce-v2.6',
+    versao_coletor: 'html-sefaz-ce-v2.7',
   };
   const linhas = [];
   function linhaDeProcesso(proc, ent, complementar) {
@@ -1971,7 +1971,7 @@ function buildLinhaGestao(enviadoEmOverride) {
     adequacao_equipe: g.adequacaoEquipe, funcoes_equivalentes: g.funcoesEquivalentes, funcoes_equivalentes_quais: g.funcoesEquivalentesQuais || null,
     gaps_senioridade: g.gapsSenioridade, gaps_senioridade_detalhe: g.gapsSenioridadeDetalhe || null,
     enviado: state.enviado?.enviado ? 'SIM' : 'NAO', enviado_em: enviadoEm, data_coleta: today,
-    versao_coletor: 'html-sefaz-ce-v2.6',
+    versao_coletor: 'html-sefaz-ce-v2.7',
   };
 }
 
@@ -1987,7 +1987,7 @@ function exportCSV() {
   const blob = new Blob(['﻿' + rows.join('\n')], { type: 'text/csv;charset=utf-8' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `coleta-SEFAZ-CE-v2.6-${gestao?'gestao-':''}${slug}-${today}.csv`;
+  a.download = `coleta-SEFAZ-CE-v2.7-${gestao?'gestao-':''}${slug}-${today}.csv`;
   a.click();
 }
 function exportJSON() {
@@ -1995,7 +1995,7 @@ function exportJSON() {
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `coleta-SEFAZ-CE-v2.6-${(state.nucleo||'sem-nucleo').replace(/[^a-z0-9]/gi,'_')}.json`;
+  a.download = `coleta-SEFAZ-CE-v2.7-${(state.nucleo||'sem-nucleo').replace(/[^a-z0-9]/gi,'_')}.json`;
   a.click();
 }
 
